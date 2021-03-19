@@ -1,13 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Text.Json;
 
 namespace ConsoleFileManager
 {
     class Program
     {
+        static void SaveCurrentDirectory(string currDir)
+        {
+            Properties.Settings.Default.CurrentDirectory = currDir;
+            Properties.Settings.Default.Save();
+        }
+        static string ReadCurrentDirectory()
+        {
+            return Properties.Settings.Default.CurrentDirectory;
+        }
+        static void Config()
+        {
+            if (Properties.Settings.Default.ScreenHeight == 0)
+            {
+
+                Console.WriteLine("Введите размер окна программы по высоте:");
+                Properties.Settings.Default.ScreenHeight = Convert.ToInt32(Console.ReadLine());
+                Properties.Settings.Default.Save();
+            }
+            if (Properties.Settings.Default.ScreenWidth == 0)
+            {
+
+                Console.WriteLine("Введите размер окна программы по ширине:");
+                Properties.Settings.Default.ScreenWidth = Convert.ToInt32(Console.ReadLine());
+                Properties.Settings.Default.Save();
+            }
+            if (Properties.Settings.Default.CountElementsOnPage == 0)
+            {
+
+                Console.WriteLine("Введите количество отображаемых элементов на странице:");
+                Properties.Settings.Default.CountElementsOnPage = Convert.ToInt32(Console.ReadLine());
+                Properties.Settings.Default.Save();
+            }
+            if (Properties.Settings.Default.EnclosureLevel == 0)
+            {
+
+                Console.WriteLine("Введите количество уровней вложенности каталогов:");
+                Properties.Settings.Default.EnclosureLevel = Convert.ToInt32(Console.ReadLine());
+                Properties.Settings.Default.Save();
+            }
+        }
+
         static List<string> parseInputString(string inputString)
         {
             List<string> commands = new List<string>(); // выходной список
