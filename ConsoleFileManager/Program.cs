@@ -16,21 +16,16 @@ namespace ConsoleFileManager
         {
             return Properties.Settings.Default.CurrentDirectory;
         }
-        static void Config()
+        static void CheckAndWriteConfig()
         {
-            if (Properties.Settings.Default.ScreenHeight == 0)
+            if (Properties.Settings.Default.ScreenHeight == 0 || Properties.Settings.Default.ScreenWidth == 0)
             {
 
                 Console.WriteLine("Введите размер окна программы по высоте:");
                 Properties.Settings.Default.ScreenHeight = Convert.ToInt32(Console.ReadLine());
-                Properties.Settings.Default.Save();
-            }
-            if (Properties.Settings.Default.ScreenWidth == 0)
-            {
-
                 Console.WriteLine("Введите размер окна программы по ширине:");
                 Properties.Settings.Default.ScreenWidth = Convert.ToInt32(Console.ReadLine());
-                Properties.Settings.Default.Save();
+                Properties.Settings.Default.Save();               
             }
             if (Properties.Settings.Default.CountElementsOnPage == 0)
             {
@@ -46,6 +41,11 @@ namespace ConsoleFileManager
                 Properties.Settings.Default.EnclosureLevel = Convert.ToInt32(Console.ReadLine());
                 Properties.Settings.Default.Save();
             }
+        }
+
+        static void ApplyConfig()
+        {
+            Console.SetWindowSize(Properties.Settings.Default.ScreenHeight, Properties.Settings.Default.ScreenWidth);
         }
 
         static List<string> parseInputString(string inputString)
