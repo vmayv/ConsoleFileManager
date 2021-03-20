@@ -66,12 +66,12 @@ namespace ConsoleFileManager
 
         private static void SetEnclosureLevel(List<string> arguments)
         {
-            throw new System.NotImplementedException();
+            SetEnclosureLevel(Convert.ToInt32(arguments[0]));
         }
 
         private static void SetPaging(List<string> arguments)
         {
-            throw new System.NotImplementedException();
+            SetCountElementsOnPage(Convert.ToInt32(arguments[0]));
         }
 
         private static void ShowFileAttributes(List<string> arguments)

@@ -17,8 +17,17 @@ namespace ConsoleFileManager
         static int GetScreenHeight() => Properties.Settings.Default.ScreenHeight;
         static int GetScreenWidth() => Properties.Settings.Default.ScreenWidth;
         static int GetEnclosureLevel() => Properties.Settings.Default.EnclosureLevel;
+        static void SetEnclosureLevel(int count)
+        {
+            Properties.Settings.Default.EnclosureLevel = count;
+            Properties.Settings.Default.Save();
+        }
         static int GetCountElementsOnPage() => Properties.Settings.Default.CountElementsOnPage;
-
+        static void SetCountElementsOnPage(int count)
+        {
+            Properties.Settings.Default.CountElementsOnPage = count;
+            Properties.Settings.Default.Save();
+        }
         static void InitializeConfig()
         {
             if (Properties.Settings.Default.ScreenHeight == 0 || Properties.Settings.Default.ScreenWidth == 0)
