@@ -5,18 +5,20 @@ using System.Text.Json;
 
 namespace ConsoleFileManager
 {
-    class Program
+   public class Program
     {
         static void SaveCurrentDirectory(string currDir)
         {
             Properties.Settings.Default.CurrentDirectory = currDir;
             Properties.Settings.Default.Save();
         }
-        static string ReadCurrentDirectory()
-        {
-            return Properties.Settings.Default.CurrentDirectory;
-        }
-        static void CheckAndWriteConfig()
+        static string GetCurrentDirectory() => Properties.Settings.Default.CurrentDirectory;
+        static int GetScreenHeight() => Properties.Settings.Default.ScreenHeight;
+        static int GetScreenWidth() => Properties.Settings.Default.ScreenWidth;
+        static int GetEnclosureLevel() => Properties.Settings.Default.EnclosureLevel;
+        static int GetCountElementsOnPage() => Properties.Settings.Default.CountElementsOnPage;
+        
+        static void InitializeConfig()
         {
             if (Properties.Settings.Default.ScreenHeight == 0 || Properties.Settings.Default.ScreenWidth == 0)
             {
@@ -43,12 +45,12 @@ namespace ConsoleFileManager
             }
         }
 
-        static void ApplyConfig()
+        /*static void ApplyConfig()
         {
             Console.SetWindowSize(Properties.Settings.Default.ScreenHeight, Properties.Settings.Default.ScreenWidth);
-        }
+        }*/
 
-        static List<string> parseInputString(string inputString)
+      public  static List<string> parseInputString(string inputString)
         {
             List<string> commands = new List<string>(); // выходной список
             string currentString = ""; // текущая строка
@@ -75,11 +77,6 @@ namespace ConsoleFileManager
 
         static void Main(string[] args)
         {
-            string x = Console.ReadLine();
-            foreach (string y in parseInputString(x))
-            {
-                Console.WriteLine(y);
-            }
             Console.ReadKey();
         }
     }
