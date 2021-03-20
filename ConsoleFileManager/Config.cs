@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleFileManager
 {
-   public partial class Program
+    public partial class Program
     {
         static void SaveCurrentDirectory(string currDir)
         {
@@ -14,6 +14,11 @@ namespace ConsoleFileManager
             Properties.Settings.Default.Save();
         }
         static string GetCurrentDirectory() => Properties.Settings.Default.CurrentDirectory;
+        static void SetCurrentDirectory(string directory)
+        {
+            Properties.Settings.Default.CurrentDirectory = directory;
+            Properties.Settings.Default.Save();
+        }
         static int GetScreenHeight() => Properties.Settings.Default.ScreenHeight;
         static int GetScreenWidth() => Properties.Settings.Default.ScreenWidth;
         static int GetEnclosureLevel() => Properties.Settings.Default.EnclosureLevel;

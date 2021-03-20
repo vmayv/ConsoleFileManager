@@ -9,9 +9,12 @@ namespace ConsoleFileManager
 
         static void Main(string[] args)
         {
-            var inputString = Console.ReadLine();
-            var commands = parseInputString(inputString);
-            ExecuteCommand(commands);
+            while (true)
+            {
+                var inputString = Console.ReadLine();
+                var commands = parseInputString(inputString);
+                ExecuteCommand(commands);
+            }
         }
     }
 }

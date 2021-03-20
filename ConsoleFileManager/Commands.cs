@@ -41,6 +41,9 @@ namespace ConsoleFileManager
             var arguments = commands.Skip(1).ToList();
             switch (command)
             {
+                case "ls":
+                    ListDirectory(arguments);
+                    break;
                 case "cd":
                     ChangeDirectory(arguments);
                     break;
@@ -64,6 +67,11 @@ namespace ConsoleFileManager
             }
         }
 
+        private static void ChangeDirectory(List<string> arguments)
+        {
+            SetCurrentDirectory(arguments[0]);
+        }
+
         private static void SetEnclosureLevel(List<string> arguments)
         {
             SetEnclosureLevel(Convert.ToInt32(arguments[0]));
@@ -76,7 +84,7 @@ namespace ConsoleFileManager
 
         private static void ShowFileAttributes(List<string> arguments)
         {
-            var file = arguments[0];
+            var file = Path.Combine(GetCurrentDirectory(), arguments[0]);
             var extension = Path.GetFileNameWithoutExtension(file);
             var fileInfo = new FileInfo(file);
             var attributes = fileInfo.Attributes.ToString();
@@ -85,7 +93,7 @@ namespace ConsoleFileManager
 
         private static void Remove(List<string> arguments)
         {
-            var source = arguments[0];
+            var source = Path.Combine(GetCurrentDirectory(), arguments[0]);
             if (File.Exists(source))
             {
                 File.Delete(source);
@@ -98,8 +106,8 @@ namespace ConsoleFileManager
 
         private static void Copy(List<string> arguments)
         {
-            var source = arguments[0];
-            var destination = arguments[1];
+            var source = Path.Combine(GetCurrentDirectory(), arguments[0]);
+            var destination = Path.Combine(GetCurrentDirectory(), arguments[1]);
             if (File.Exists(source))
             {
                 File.Copy(source, destination);
@@ -111,9 +119,9 @@ namespace ConsoleFileManager
             }
         }
 
-        private static void ChangeDirectory(List<string> arguments)
+        private static void ListDirectory(List<string> arguments)
         {
-            var path = arguments[0];
+            var path = Path.Combine(GetCurrentDirectory(), arguments[0]);
             var enclosureLevel = arguments.Count == 3 ? Convert.ToInt32(arguments[2]) : GetEnclosureLevel();
             _directories = Directory.GetDirectories(path);
             _files = Directory.GetFiles(path);
