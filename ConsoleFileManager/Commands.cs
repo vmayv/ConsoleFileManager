@@ -76,12 +76,24 @@ namespace ConsoleFileManager
 
         private static void ShowFileAttributes(List<string> arguments)
         {
-            throw new System.NotImplementedException();
+            var file = arguments[0];
+            var extension = Path.GetFileNameWithoutExtension(file);
+            var fileInfo = new FileInfo(file);
+            var attributes = fileInfo.Attributes.ToString();
+            var size = fileInfo.Length;
         }
 
         private static void Remove(List<string> arguments)
         {
-            throw new System.NotImplementedException();
+            var source = arguments[0];
+            if (File.Exists(source))
+            {
+                File.Delete(source);
+            }
+            if (Directory.Exists(source))
+            {
+                Directory.Delete(source, true);
+            }
         }
 
         private static void Copy(List<string> arguments)
@@ -135,12 +147,12 @@ namespace ConsoleFileManager
 
             // If copying subdirectories, copy them and their contents to new location.
 
-                foreach (DirectoryInfo subdir in dirs)
-                {
-                    string tempPath = Path.Combine(destDirName, subdir.Name);
-                    CopyDirectory(subdir.FullName, tempPath);
-                }
-            
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string tempPath = Path.Combine(destDirName, subdir.Name);
+                CopyDirectory(subdir.FullName, tempPath);
+            }
+
         }
     }
 }
