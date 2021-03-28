@@ -72,13 +72,58 @@ namespace ConsoleFileManager
                     SetPage(arguments);
                     break;
                 case "touch":
-                    CreateFile();
+                    CreateFile(arguments);
                     break;
                 case "mkdir":
-                    CreateDirectory();
+                    CreateDirectory(arguments);
+                    break;
+                case "cat":
+                    PrintFile(arguments);
                     break;
                 default:
                     break;
+            }
+        }
+
+        private static void PrintFile(List<string> arguments)
+        {
+            string filename = arguments[0];
+            if (File.Exists(filename))
+            {
+                Console.Clear();
+                var data = File.ReadAllText(filename);
+                Console.WriteLine(data);
+                Console.ReadKey();
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        private static void CreateFile(List<string> arguments)
+        {
+            string filename = arguments[0];
+            if (File.Exists(filename))
+            {
+                return;
+            }
+            else
+            {
+                File.Create(filename);
+            }
+        }
+
+        private static void CreateDirectory(List<string> arguments)
+        {
+            string directory = arguments[0];
+            if (Directory.Exists(directory))
+            {
+                return;
+            }
+            else
+            {
+                Directory.CreateDirectory(directory);
             }
         }
 
@@ -99,7 +144,8 @@ namespace ConsoleFileManager
             if (currentPage == 0)
             {
                 return;
-            } else
+            }
+            else
             {
                 currentPage--;
             }
@@ -110,7 +156,7 @@ namespace ConsoleFileManager
             int number = Convert.ToInt32(arguments[0]);
             currentPage = number - 1;
         }
-
+        //TODO: абсолютные и относительные пути
         private static void ChangeDirectory(List<string> arguments)
         {
             SetCurrentDirectory(arguments[0]);
