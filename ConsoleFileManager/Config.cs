@@ -58,6 +58,7 @@ namespace ConsoleFileManager
                 Properties.Settings.Default.EnclosureLevel = Convert.ToInt32(Console.ReadLine());
                 Properties.Settings.Default.Save();
             }
+            SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
         }
 
         /*static void ApplyConfig()

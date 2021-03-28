@@ -62,14 +62,59 @@ namespace ConsoleFileManager
                 case "/enclosure":
                     SetEnclosureLevel(arguments);
                     break;
+                case "np":
+                    NextPage();
+                    break;
+                case "pp":
+                    PreviousPage();
+                    break;
+                case "sp":
+                    SetPage(arguments);
+                    break;
+                case "touch":
+                    CreateFile();
+                    break;
+                case "mkdir":
+                    CreateDirectory();
+                    break;
                 default:
                     break;
             }
         }
 
+        private static void NextPage()
+        {
+            if (currentPage == pagesCount - 1)
+            {
+                return;
+            }
+            else
+            {
+                currentPage++;
+            }
+        }
+
+        private static void PreviousPage()
+        {
+            if (currentPage == 0)
+            {
+                return;
+            } else
+            {
+                currentPage--;
+            }
+        }
+
+        private static void SetPage(List<string> arguments)
+        {
+            int number = Convert.ToInt32(arguments[0]);
+            currentPage = number - 1;
+        }
+
         private static void ChangeDirectory(List<string> arguments)
         {
             SetCurrentDirectory(arguments[0]);
+            currentPage = 0;
         }
 
         private static void SetEnclosureLevel(List<string> arguments)
