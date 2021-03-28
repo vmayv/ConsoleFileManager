@@ -162,7 +162,8 @@ namespace ConsoleFileManager
         //TODO: абсолютные и относительные пути
         private static void ChangeDirectory(List<string> arguments)
         {
-            SetCurrentDirectory(arguments[0]);
+            var path = GetAbsolutePath(arguments[0]);
+            SetCurrentDirectory(path);
             currentPage = 0;
         }
 
@@ -255,6 +256,14 @@ namespace ConsoleFileManager
                 CopyDirectory(subdir.FullName, tempPath);
             }
 
+        }
+    
+        static string GetAbsolutePath(string path)
+        {
+            if(Path.IsPathRooted(path)) {
+                return path;
+            }
+            return Path.GetFullPath(Path.Combine(GetCurrentDirectory(), path));
         }
     }
 }

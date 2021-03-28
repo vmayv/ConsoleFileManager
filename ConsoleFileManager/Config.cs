@@ -8,11 +8,6 @@ namespace ConsoleFileManager
 {
     public partial class Program
     {
-        static void SaveCurrentDirectory(string currDir)
-        {
-            Properties.Settings.Default.CurrentDirectory = currDir;
-            Properties.Settings.Default.Save();
-        }
         static string GetCurrentDirectory() => Properties.Settings.Default.CurrentDirectory;
         static void SetCurrentDirectory(string directory)
         {
@@ -37,7 +32,6 @@ namespace ConsoleFileManager
         {
             if (Properties.Settings.Default.ScreenHeight == 0 || Properties.Settings.Default.ScreenWidth == 0)
             {
-
                 Console.WriteLine("Введите размер окна программы по высоте:");
                 Properties.Settings.Default.ScreenHeight = Convert.ToInt32(Console.ReadLine());
                 Console.WriteLine("Введите размер окна программы по ширине:");
@@ -46,7 +40,6 @@ namespace ConsoleFileManager
             }
             if (Properties.Settings.Default.CountElementsOnPage == 0)
             {
-
                 Console.WriteLine("Введите количество отображаемых элементов на странице:");
                 Properties.Settings.Default.CountElementsOnPage = Convert.ToInt32(Console.ReadLine());
                 Properties.Settings.Default.Save();
@@ -58,7 +51,10 @@ namespace ConsoleFileManager
                 Properties.Settings.Default.EnclosureLevel = Convert.ToInt32(Console.ReadLine());
                 Properties.Settings.Default.Save();
             }
-            SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+            if(GetCurrentDirectory() == "")
+            {
+                SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+            }
         }
 
         /*static void ApplyConfig()

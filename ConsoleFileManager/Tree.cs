@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleFileManager
 {
@@ -40,19 +37,18 @@ namespace ConsoleFileManager
             var processedRows = 0;
             foreach (var file in filesOnPage)
             {
-                if(processedRows == countElementsOnPage)
+                if (processedRows == countElementsOnPage)
                 {
                     return;
                 }
                 var info = new FileInfo(file);
-                //TODO: 15 ??
-                var name = info.Name.Length > 15 ? info.Name.Substring(0, 15) : info.Name;
+                //TODO: 25 ??
+                var name = info.Name.Length > 25 ? info.Name.Substring(0, 25) : info.Name;
                 var line = FormatColumns(
                     Console.WindowWidth / 2,
                     name,
                     BytesToString(info.Length),
-                    info.LastWriteTime.ToShortDateString(),
-                    info.LastWriteTime.ToShortTimeString());
+                    $"{info.LastWriteTime.ToShortDateString()}  {info.LastWriteTime.ToShortTimeString()}");
                 Console.SetCursorPosition(columnWidth, startRow++);
                 Console.WriteLine(line);
                 processedRows++;
@@ -71,7 +67,7 @@ namespace ConsoleFileManager
                 Console.SetCursorPosition(GetScreenWidth() - 1, i);
                 Console.WriteLine("║");
             }
-            
+
             for (int i = 0; i < GetScreenWidth(); i++)
             {
                 Console.SetCursorPosition(i, GetScreenHeight() - 2);
@@ -83,14 +79,14 @@ namespace ConsoleFileManager
             Console.WriteLine("╝");
             Console.SetCursorPosition(GetScreenWidth() / 2 - 1, GetScreenHeight() - 2);
             Console.WriteLine("╩");
-            
+
             Console.SetCursorPosition(1, 3);
         }
 
         static string FormatColumns(int windowWidth, params string[] values)
         {
             windowWidth--;
-            if(values.Length == 1)
+            if (values.Length == 1)
             {
                 return values[0].PadLeft(windowWidth);
             }
@@ -101,11 +97,11 @@ namespace ConsoleFileManager
             var remainingSpacesEnd = "".PadLeft((int)Math.Floor(remainingSpacesCount / 2.0));
             var row = "";
             var spaces = "".PadLeft(spacesLength / 2);
-            foreach (var item in values.Skip(1).Take(values.Length-2))
+            foreach (var item in values.Skip(1).Take(values.Length - 2))
             {
                 row += spaces + item + spaces;
             }
-            row = values[0] + remainingSpacesBegin + spaces + row + spaces + remainingSpacesEnd + values[values.Length -1];
+            row = values[0] + remainingSpacesBegin + spaces + row + spaces + remainingSpacesEnd + values[values.Length - 1];
             row = row.PadRight(windowWidth);
             return row;
         }
