@@ -36,7 +36,7 @@ namespace ConsoleFileManager
             var files = Directory.GetFiles(path);
             pagesCount = files.Length / countElementsOnPage;
             var filesOnPage = files.Skip(currentPage * countElementsOnPage).Take(countElementsOnPage);
-            var startRow = 1;
+            var startRow = 2;
             var processedRows = 0;
             foreach (var file in filesOnPage)
             {
@@ -59,9 +59,41 @@ namespace ConsoleFileManager
             }
         }
 
+        static void WriteSeparator()
+        {
+            //todo: header height
+            for (int i = 2; i < GetScreenHeight() - 2; i++)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.Write("║");
+                Console.SetCursorPosition(GetScreenWidth() / 2 - 1, i);
+                Console.Write("║");
+                Console.SetCursorPosition(GetScreenWidth() - 1, i);
+                Console.WriteLine("║");
+            }
+            
+            for (int i = 0; i < GetScreenWidth(); i++)
+            {
+                Console.SetCursorPosition(i, GetScreenHeight() - 2);
+                Console.Write("═");
+            }
+            Console.SetCursorPosition(0, GetScreenHeight() - 2);
+            Console.WriteLine("╚");
+            Console.SetCursorPosition(GetScreenWidth() - 1, GetScreenHeight() - 2);
+            Console.WriteLine("╝");
+            Console.SetCursorPosition(GetScreenWidth() / 2 - 1, GetScreenHeight() - 2);
+            Console.WriteLine("╩");
+            
+            Console.SetCursorPosition(1, 3);
+        }
 
         static string FormatColumns(int windowWidth, params string[] values)
         {
+            windowWidth--;
+            if(values.Length == 1)
+            {
+                return values[0].PadLeft(windowWidth);
+            }
             var stringLength = values.Sum(e => e.Length);
             var spacesLength = (windowWidth - stringLength) / (values.Length - 1);
             var remainingSpacesCount = windowWidth - (spacesLength / 2 * 2 * (values.Length - 1) + stringLength);
@@ -79,7 +111,7 @@ namespace ConsoleFileManager
         }
         static string FormatColumns(params string[] values)
         {
-            return FormatColumns(Console.WindowWidth, values);
+            return FormatColumns(GetScreenWidth(), values);
         }
 
         static String BytesToString(long byteCount)

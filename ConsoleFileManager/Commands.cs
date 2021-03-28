@@ -87,6 +87,7 @@ namespace ConsoleFileManager
 
         private static void PrintFile(List<string> arguments)
         {
+            Console.BackgroundColor = ConsoleColor.Black;
             string filename = arguments[0];
             if (File.Exists(filename))
             {
@@ -99,6 +100,8 @@ namespace ConsoleFileManager
             {
                 return;
             }
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+
         }
 
         private static void CreateFile(List<string> arguments)
@@ -110,7 +113,7 @@ namespace ConsoleFileManager
             }
             else
             {
-                File.Create(filename);
+                File.Create(filename).Close();
             }
         }
 
