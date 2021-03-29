@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -11,12 +12,11 @@ namespace ConsoleFileManager
 
         static void WriteDirectories(string path, int columnWidth, int depth)
         {
-            WriteDirectories(path, columnWidth, 0, depth, 1, 2);
+            var startRow = headerHeight;
+            WriteDirectories(path, columnWidth, 0, depth, 1, ref startRow);
         }
-        static void WriteDirectories(string path, int columnWidth, int depthStart, int depthEnd, int column, int line)
+        static void WriteDirectories(string path, int columnWidth, int depthStart, int depthEnd, int column, ref int line)
         {
-            try
-            {
                 if (depthStart == depthEnd)
                 {
                     return;
@@ -30,19 +30,16 @@ namespace ConsoleFileManager
                 var directories = Directory.GetDirectories(path);
                 foreach (var dir in directories)
                 {
+                    if (line == GetScreenHeight() - headerHeight)
+                    {
+                        return;
+                    }
                     var dirname = separator + Path.GetFileName(dir);
-                    dirname = dirname.Length > columnWidth - 1 ? dirname.Substring(0, columnWidth - 1) : dirname;
+                    dirname = dirname.Length > columnWidth - 3 ? dirname.Substring(0, columnWidth - 3) : dirname;
                     Console.SetCursorPosition(column, line++);
                     Console.WriteLine(dirname.PadRight(columnWidth - 1 - column));
-                    WriteDirectories(dir, columnWidth, depthStart + 1, depthEnd, column + 1, line);
+                    WriteDirectories(dir, columnWidth, depthStart + 1, depthEnd, column + 1, ref line);
                 }
-            }
-            catch (UnauthorizedAccessException)
-            {
-            }
-            catch (DirectoryNotFoundException)
-            {
-            }
         }
 
         private static void WriteFiles(string path, int columnWidth, int countElementsOnPage)
@@ -80,13 +77,32 @@ namespace ConsoleFileManager
 
         static void WritePanel()
         {
-            //Console.SetCursorPosition();
+            var drive = DriveInfo.GetDrives().FirstOrDefault(e => e.Name == Path.GetPathRoot(GetCurrentDirectory()));
+            Console.SetCursorPosition(1, panelStartRow);
+            Console.WriteLine($"Статистика диска {drive.Name}");
+            Console.SetCursorPosition(1, panelStartRow + 1);
+            Console.WriteLine($"Общий объем: {BytesToString(drive.TotalSize)}");
+            Console.SetCursorPosition(1, panelStartRow + 2);
+            Console.WriteLine($"Доступно: {BytesToString(drive.TotalFreeSpace)}");
+            Console.SetCursorPosition(1, panelStartRow + 3);
+
+            Console.SetCursorPosition(GetScreenWidth() / 2, panelStartRow);
+            Console.WriteLine($"Текущая страница: {currentPage + 1} из {pagesCount + 1}");
+            Console.SetCursorPosition(GetScreenWidth() / 2, panelStartRow + 1);
+            var errorMesage = error == string.Empty ? "" : $"Ошибка: {error}";
+                if (errorMesage.Length > GetScreenWidth() / 2)
+            {
+                errorMesage = errorMesage.Substring(0, GetScreenWidth() / 2);
+            }
+            Console.WriteLine(errorMesage);
+            Console.SetCursorPosition(GetScreenWidth() / 2, panelStartRow + 2);
+            //Console.WriteLine($"Статистика папки {GetCurrentDirectory()}");
+
         }
 
         static void WriteBorders()
         {
-            //todo: header height
-            for (int i = 2; i < GetScreenHeight() - headerHeight; i++)
+            for (int i = panelStartRow; i < GetScreenHeight() - 1; i++)
             {
                 Console.SetCursorPosition(0, i);
                 Console.Write("║");
@@ -98,25 +114,29 @@ namespace ConsoleFileManager
 
             for (int i = 0; i < GetScreenWidth(); i++)
             {
-                Console.SetCursorPosition(i, GetScreenHeight() - headerHeight);
+                Console.SetCursorPosition(i, panelStartRow - 1);
+                Console.Write("═");
+                Console.SetCursorPosition(i, headerHeight - 1);
+                Console.Write("═");
+                Console.SetCursorPosition(i, GetScreenHeight() - 2);
                 Console.Write("═");
             }
-            Console.SetCursorPosition(0, 1);
+            Console.SetCursorPosition(0, panelStartRow - 1);
             Console.WriteLine("╔");
 
-            Console.SetCursorPosition(GetScreenWidth() - 1, 1);
+            Console.SetCursorPosition(GetScreenWidth() - 1, panelStartRow - 1);
             Console.WriteLine("╗");
 
-            Console.SetCursorPosition(0, GetScreenHeight() - headerHeight);
+            Console.SetCursorPosition(0, GetScreenHeight() - 2);
             Console.WriteLine("╚");
 
-            Console.SetCursorPosition(GetScreenWidth() - 1, GetScreenHeight() - headerHeight);
+            Console.SetCursorPosition(GetScreenWidth() - 1, GetScreenHeight() - 2);
             Console.WriteLine("╝");
 
-            Console.SetCursorPosition(GetScreenWidth() / 2 - 1, GetScreenHeight() - headerHeight);
+            Console.SetCursorPosition(GetScreenWidth() / 2 - 1, GetScreenHeight() - 2);
             Console.WriteLine("╩");
 
-            Console.SetCursorPosition(GetScreenWidth() / 2 - 1, 1);
+            Console.SetCursorPosition(GetScreenWidth() / 2 - 1, headerHeight - 1);
             Console.WriteLine("╦");
         }
 
@@ -155,7 +175,9 @@ namespace ConsoleFileManager
             long bytes = Math.Abs(byteCount);
             int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
             double num = Math.Round(bytes / Math.Pow(1024, place), 1);
-            return (Math.Sign(byteCount) * num).ToString() + suf[place];
+            return $"{Math.Sign(byteCount) * num} {suf[place]}";
         }
+      
+
     }
 }

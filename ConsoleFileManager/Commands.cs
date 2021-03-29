@@ -9,6 +9,7 @@ namespace ConsoleFileManager
     {
         private static string[] _directories;
         private static string[] _files;
+        private static string error = "";
 
         public static List<string> parseInputString(string inputString)
         {
@@ -37,54 +38,70 @@ namespace ConsoleFileManager
 
         static void ExecuteCommand(List<string> commands)
         {
-            var command = commands[0];
-            var arguments = commands.Skip(1).ToList();
-            switch (command)
+            bool exceptionWasThrown = false;
+            try
             {
-                case "exit":
-                    Exit();
-                    break;
-                case "ls":
-                    ListDirectory(arguments);
-                    break;
-                case "cd":
-                    ChangeDirectory(arguments);
-                    break;
-                case "cp":
-                    CopyFile(arguments);
-                    break;
-                case "rm":
-                    Remove(arguments);
-                    break;
-                case "file":
-                    ShowFileAttributes(arguments);
-                    break;
-                case "/paging":
-                    SetPaging(arguments);
-                    break;
-                case "/enclosure":
-                    SetEnclosureLevel(arguments);
-                    break;
-                case "np":
-                    NextPage();
-                    break;
-                case "pp":
-                    PreviousPage();
-                    break;
-                case "sp":
-                    SetPage(arguments);
-                    break;
-                case "touch":
-                    CreateFile(arguments);
-                    break;
-                case "mkdir":
-                    CreateDirectory(arguments);
-                    break;
-                case "cat":
-                    PrintFile(arguments);
-                    break;
-                default:
-                    break;
+                var command = commands[0];
+                var arguments = commands.Skip(1).ToList();
+                switch (command)
+                {
+                    case "exit":
+                        Exit();
+                        break;
+                    case "ls":
+                        ListDirectory(arguments);
+                        break;
+                    case "cd":
+                        ChangeDirectory(arguments);
+                        break;
+                    case "cp":
+                        Copy(arguments);
+                        break;
+                    case "rm":
+                        Remove(arguments);
+                        break;
+                    case "file":
+                        ShowFileAttributes(arguments);
+                        break;
+                    case "/paging":
+                        SetPaging(arguments);
+                        break;
+                    case "/enclosure":
+                        SetEnclosureLevel(arguments);
+                        break;
+                    case "np":
+                        NextPage();
+                        break;
+                    case "pp":
+                        PreviousPage();
+                        break;
+                    case "sp":
+                        SetPage(arguments);
+                        break;
+                    case "touch":
+                        CreateFile(arguments);
+                        break;
+                    case "mkdir":
+                        CreateDirectory(arguments);
+                        break;
+                    case "cat":
+                        PrintFile(arguments);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                exceptionWasThrown = true;
+               
+                    error = ex.Message;
+            } finally
+            {
+                if(!exceptionWasThrown)
+                {
+                    error = "";
+                };
             }
         }
 
@@ -140,7 +157,7 @@ namespace ConsoleFileManager
 
         private static void NextPage()
         {
-            if (currentPage == pagesCount - 1)
+            if (currentPage == pagesCount)
             {
                 return;
             }
@@ -165,6 +182,10 @@ namespace ConsoleFileManager
         private static void SetPage(List<string> arguments)
         {
             int number = Convert.ToInt32(arguments[0]);
+            if(number < 1 || number > pagesCount)
+            {
+                throw new Exception($"Страница {number} не найдена");
+            }
             currentPage = number - 1;
         }
         //TODO: абсолютные и относительные пути
@@ -210,7 +231,7 @@ namespace ConsoleFileManager
             }
         }
 
-        private static void CopyFile(List<string> arguments)
+        private static void Copy(List<string> arguments)
         {
             var source = GetAbsolutePath(arguments[0]);
             var destination = GetAbsolutePath(arguments[1]);
