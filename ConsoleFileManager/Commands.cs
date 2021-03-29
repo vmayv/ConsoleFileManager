@@ -41,6 +41,9 @@ namespace ConsoleFileManager
             var arguments = commands.Skip(1).ToList();
             switch (command)
             {
+                case "exit":
+                    System.Environment.Exit(0);
+                    break;
                 case "ls":
                     ListDirectory(arguments);
                     break;
@@ -48,7 +51,7 @@ namespace ConsoleFileManager
                     ChangeDirectory(arguments);
                     break;
                 case "cp":
-                    Copy(arguments);
+                    CopyFile(arguments);
                     break;
                 case "rm":
                     Remove(arguments);
@@ -88,7 +91,7 @@ namespace ConsoleFileManager
         private static void PrintFile(List<string> arguments)
         {
             Console.BackgroundColor = ConsoleColor.Black;
-            string filename = arguments[0];
+            string filename = GetAbsolutePath(arguments[0]);
             if (File.Exists(filename))
             {
                 Console.Clear();
@@ -106,7 +109,7 @@ namespace ConsoleFileManager
 
         private static void CreateFile(List<string> arguments)
         {
-            string filename = arguments[0];
+            string filename = GetAbsolutePath(arguments[0]);
             if (File.Exists(filename))
             {
                 return;
@@ -119,7 +122,7 @@ namespace ConsoleFileManager
 
         private static void CreateDirectory(List<string> arguments)
         {
-            string directory = arguments[0];
+            string directory = GetAbsolutePath(arguments[0]);
             if (Directory.Exists(directory))
             {
                 return;
@@ -163,8 +166,11 @@ namespace ConsoleFileManager
         private static void ChangeDirectory(List<string> arguments)
         {
             var path = GetAbsolutePath(arguments[0]);
-            SetCurrentDirectory(path);
-            currentPage = 0;
+            if (Directory.Exists(path))
+            {
+                SetCurrentDirectory(path);
+                currentPage = 0;
+            }
         }
 
         private static void SetEnclosureLevel(List<string> arguments)
@@ -179,7 +185,7 @@ namespace ConsoleFileManager
 
         private static void ShowFileAttributes(List<string> arguments)
         {
-            var file = Path.Combine(GetCurrentDirectory(), arguments[0]);
+            var file = GetAbsolutePath(arguments[0]);
             var extension = Path.GetFileNameWithoutExtension(file);
             var fileInfo = new FileInfo(file);
             var attributes = fileInfo.Attributes.ToString();
@@ -188,7 +194,7 @@ namespace ConsoleFileManager
 
         private static void Remove(List<string> arguments)
         {
-            var source = Path.Combine(GetCurrentDirectory(), arguments[0]);
+            var source = GetAbsolutePath(arguments[0]);
             if (File.Exists(source))
             {
                 File.Delete(source);
@@ -199,17 +205,21 @@ namespace ConsoleFileManager
             }
         }
 
-        private static void Copy(List<string> arguments)
+        private static void CopyFile(List<string> arguments)
         {
-            var source = Path.Combine(GetCurrentDirectory(), arguments[0]);
-            var destination = Path.Combine(GetCurrentDirectory(), arguments[1]);
+            var source = GetAbsolutePath(arguments[0]);
+            var destination = GetAbsolutePath(arguments[1]);
+
             if (File.Exists(source))
             {
+                if (Directory.Exists(destination))
+                {
+                    destination = Path.Combine(destination, Path.GetFileName(source));
+                }
                 File.Copy(source, destination);
             }
             if (Directory.Exists(source))
             {
-
                 CopyDirectory(source, destination);
             }
         }
@@ -257,10 +267,11 @@ namespace ConsoleFileManager
             }
 
         }
-    
+
         static string GetAbsolutePath(string path)
         {
-            if(Path.IsPathRooted(path)) {
+            if (Path.IsPathRooted(path))
+            {
                 return path;
             }
             return Path.GetFullPath(Path.Combine(GetCurrentDirectory(), path));

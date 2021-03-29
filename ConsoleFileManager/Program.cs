@@ -17,10 +17,10 @@ namespace ConsoleFileManager
             while (true)
             {
                 Console.Clear();
-                var headerRow = FormatColumns(GetCurrentDirectory(), DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString());
+                var headerRow = FormatColumns(" " + GetCurrentDirectory(), DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString());
                 Console.WriteLine(headerRow);
                 Console.WriteLine(new string('═', GetScreenWidth() - 1));
-                WriteSeparator();
+                WriteBorders();
                 WriteDirectories(GetCurrentDirectory(), GetScreenWidth() / 2, GetEnclosureLevel());
                 WriteFiles(GetCurrentDirectory(), Console.WindowWidth / 2, GetCountElementsOnPage());
                 Console.SetCursorPosition(0, GetScreenHeight() - 1);
