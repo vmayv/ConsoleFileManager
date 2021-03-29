@@ -24,7 +24,7 @@ namespace ConsoleFileManager
                 if (depthStart == 0)
                 {
                     Console.SetCursorPosition(column, line++);
-                    Console.WriteLine($"[{Path.GetFileName(Path.GetDirectoryName(path))}]");
+                    Console.WriteLine($"[..]");
                 }
                 var separator = "├";
                 var directories = Directory.GetDirectories(path);
@@ -52,7 +52,7 @@ namespace ConsoleFileManager
                 var files = Directory.GetFiles(path);
                 pagesCount = files.Length / countElementsOnPage;
                 var filesOnPage = files.Skip(currentPage * countElementsOnPage).Take(countElementsOnPage);
-                var startRow = 2;
+                var startRow = headerHeight;
                 var processedRows = 0;
 
                 foreach (var file in filesOnPage)
@@ -78,10 +78,15 @@ namespace ConsoleFileManager
             }
         }
 
+        static void WritePanel()
+        {
+            //Console.SetCursorPosition();
+        }
+
         static void WriteBorders()
         {
             //todo: header height
-            for (int i = 2; i < GetScreenHeight() - 2; i++)
+            for (int i = 2; i < GetScreenHeight() - headerHeight; i++)
             {
                 Console.SetCursorPosition(0, i);
                 Console.Write("║");
@@ -93,7 +98,7 @@ namespace ConsoleFileManager
 
             for (int i = 0; i < GetScreenWidth(); i++)
             {
-                Console.SetCursorPosition(i, GetScreenHeight() - 2);
+                Console.SetCursorPosition(i, GetScreenHeight() - headerHeight);
                 Console.Write("═");
             }
             Console.SetCursorPosition(0, 1);
@@ -102,13 +107,13 @@ namespace ConsoleFileManager
             Console.SetCursorPosition(GetScreenWidth() - 1, 1);
             Console.WriteLine("╗");
 
-            Console.SetCursorPosition(0, GetScreenHeight() - 2);
+            Console.SetCursorPosition(0, GetScreenHeight() - headerHeight);
             Console.WriteLine("╚");
 
-            Console.SetCursorPosition(GetScreenWidth() - 1, GetScreenHeight() - 2);
+            Console.SetCursorPosition(GetScreenWidth() - 1, GetScreenHeight() - headerHeight);
             Console.WriteLine("╝");
 
-            Console.SetCursorPosition(GetScreenWidth() / 2 - 1, GetScreenHeight() - 2);
+            Console.SetCursorPosition(GetScreenWidth() / 2 - 1, GetScreenHeight() - headerHeight);
             Console.WriteLine("╩");
 
             Console.SetCursorPosition(GetScreenWidth() / 2 - 1, 1);

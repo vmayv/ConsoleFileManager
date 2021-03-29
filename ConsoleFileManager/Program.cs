@@ -5,8 +5,8 @@ namespace ConsoleFileManager
 {
     public partial class Program
     {
-      
 
+        static int headerHeight = 2;
         static void Main(string[] args)
         {
             InitializeConfig();
@@ -21,6 +21,7 @@ namespace ConsoleFileManager
                 Console.WriteLine(headerRow);
                 Console.WriteLine(new string('═', GetScreenWidth() - 1));
                 WriteBorders();
+                WritePanel();
                 WriteDirectories(GetCurrentDirectory(), GetScreenWidth() / 2, GetEnclosureLevel());
                 WriteFiles(GetCurrentDirectory(), Console.WindowWidth / 2, GetCountElementsOnPage());
                 Console.SetCursorPosition(0, GetScreenHeight() - 1);
