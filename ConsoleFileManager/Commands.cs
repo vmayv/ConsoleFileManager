@@ -38,70 +38,54 @@ namespace ConsoleFileManager
 
         static void ExecuteCommand(List<string> commands)
         {
-            bool exceptionWasThrown = false;
-            try
+            var command = commands[0];
+            var arguments = commands.Skip(1).ToList();
+            switch (command)
             {
-                var command = commands[0];
-                var arguments = commands.Skip(1).ToList();
-                switch (command)
-                {
-                    case "exit":
-                        Exit();
-                        break;
-                    case "ls":
-                        ListDirectory(arguments);
-                        break;
-                    case "cd":
-                        ChangeDirectory(arguments);
-                        break;
-                    case "cp":
-                        Copy(arguments);
-                        break;
-                    case "rm":
-                        Remove(arguments);
-                        break;
-                    case "file":
-                        ShowFileAttributes(arguments);
-                        break;
-                    case "/paging":
-                        SetPaging(arguments);
-                        break;
-                    case "/enclosure":
-                        SetEnclosureLevel(arguments);
-                        break;
-                    case "np":
-                        NextPage();
-                        break;
-                    case "pp":
-                        PreviousPage();
-                        break;
-                    case "sp":
-                        SetPage(arguments);
-                        break;
-                    case "touch":
-                        CreateFile(arguments);
-                        break;
-                    case "mkdir":
-                        CreateDirectory(arguments);
-                        break;
-                    case "cat":
-                        PrintFile(arguments);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                exceptionWasThrown = true;
-               
-                    error = ex.Message;
-            } finally
-            {
-                if(!exceptionWasThrown)
-                {
-                    error = "";
-                };
+                case "exit":
+                    Exit();
+                    break;
+                case "ls":
+                    ListDirectory(arguments);
+                    break;
+                case "cd":
+                    ChangeDirectory(arguments);
+                    break;
+                case "cp":
+                    Copy(arguments);
+                    break;
+                case "rm":
+                    Remove(arguments);
+                    break;
+                case "file":
+                    ShowFileAttributes(arguments);
+                    break;
+                case "/paging":
+                    SetPaging(arguments);
+                    break;
+                case "/enclosure":
+                    SetEnclosureLevel(arguments);
+                    break;
+                case "np":
+                    NextPage();
+                    break;
+                case "pp":
+                    PreviousPage();
+                    break;
+                case "sp":
+                    SetPage(arguments);
+                    break;
+                case "touch":
+                    CreateFile(arguments);
+                    break;
+                case "mkdir":
+                    CreateDirectory(arguments);
+                    break;
+                case "cat":
+                    PrintFile(arguments);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -182,13 +166,13 @@ namespace ConsoleFileManager
         private static void SetPage(List<string> arguments)
         {
             int number = Convert.ToInt32(arguments[0]);
-            if(number < 1 || number > pagesCount)
+            if (number < 1 || number > pagesCount)
             {
                 throw new Exception($"Страница {number} не найдена");
             }
             currentPage = number - 1;
         }
-        //TODO: абсолютные и относительные пути
+
         private static void ChangeDirectory(List<string> arguments)
         {
             var path = GetAbsolutePath(arguments[0]);
