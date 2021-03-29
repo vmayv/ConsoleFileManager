@@ -42,7 +42,7 @@ namespace ConsoleFileManager
             switch (command)
             {
                 case "exit":
-                    System.Environment.Exit(0);
+                    Exit();
                     break;
                 case "ls":
                     ListDirectory(arguments);
@@ -86,6 +86,11 @@ namespace ConsoleFileManager
                 default:
                     break;
             }
+        }
+
+        private static void Exit()
+        {
+            System.Environment.Exit(0);
         }
 
         private static void PrintFile(List<string> arguments)
