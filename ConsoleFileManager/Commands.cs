@@ -57,9 +57,6 @@ namespace ConsoleFileManager
                 case "rm":
                     Remove(arguments);
                     break;
-                case "file":
-                    ShowFileAttributes(arguments);
-                    break;
                 case "/paging":
                     SetPaging(arguments);
                     break;
@@ -191,15 +188,6 @@ namespace ConsoleFileManager
         private static void SetPaging(List<string> arguments)
         {
             SetCountElementsOnPage(Convert.ToInt32(arguments[0]));
-        }
-
-        private static void ShowFileAttributes(List<string> arguments)
-        {
-            var file = GetAbsolutePath(arguments[0]);
-            var extension = Path.GetFileNameWithoutExtension(file);
-            var fileInfo = new FileInfo(file);
-            var attributes = fileInfo.Attributes.ToString();
-            var size = fileInfo.Length;
         }
 
         private static void Remove(List<string> arguments)
