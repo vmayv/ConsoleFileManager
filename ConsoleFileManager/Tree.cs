@@ -17,29 +17,29 @@ namespace ConsoleFileManager
         }
         static void WriteDirectories(string path, int columnWidth, int depthStart, int depthEnd, int column, ref int line)
         {
-                if (depthStart == depthEnd)
+            if (depthStart == depthEnd)
+            {
+                return;
+            }
+            if (depthStart == 0)
+            {
+                Console.SetCursorPosition(column, line++);
+                Console.WriteLine($"[..]");
+            }
+            var separator = "├";
+            var directories = Directory.GetDirectories(path);
+            foreach (var dir in directories)
+            {
+                if (line == GetScreenHeight() - headerHeight)
                 {
                     return;
                 }
-                if (depthStart == 0)
-                {
-                    Console.SetCursorPosition(column, line++);
-                    Console.WriteLine($"[..]");
-                }
-                var separator = "├";
-                var directories = Directory.GetDirectories(path);
-                foreach (var dir in directories)
-                {
-                    if (line == GetScreenHeight() - headerHeight)
-                    {
-                        return;
-                    }
-                    var dirname = separator + Path.GetFileName(dir);
-                    dirname = dirname.Length > columnWidth - 3 ? dirname.Substring(0, columnWidth - 3) : dirname;
-                    Console.SetCursorPosition(column, line++);
-                    Console.WriteLine(dirname.PadRight(columnWidth - 1 - column));
-                    WriteDirectories(dir, columnWidth, depthStart + 1, depthEnd, column + 1, ref line);
-                }
+                var dirname = separator + Path.GetFileName(dir);
+                dirname = dirname.Length > columnWidth - 3 ? dirname.Substring(0, columnWidth - 3) : dirname;
+                Console.SetCursorPosition(column, line++);
+                Console.WriteLine(dirname.PadRight(columnWidth - 1 - column));
+                WriteDirectories(dir, columnWidth, depthStart + 1, depthEnd, column + 1, ref line);
+            }
         }
 
         private static void WriteFiles(string path, int columnWidth, int countElementsOnPage)
@@ -90,9 +90,9 @@ namespace ConsoleFileManager
             Console.WriteLine($"Текущая страница: {currentPage + 1} из {pagesCount + 1}");
             Console.SetCursorPosition(GetScreenWidth() / 2, panelStartRow + 1);
             var errorMesage = error == string.Empty ? "" : $"Ошибка: {error}";
-                if (errorMesage.Length > GetScreenWidth() / 2)
+            if (errorMesage.Length > GetScreenWidth() / 2)
             {
-                errorMesage = errorMesage.Substring(0, GetScreenWidth() / 2);
+                errorMesage = errorMesage.Substring(0, GetScreenWidth() / 2 - 1);
             }
             Console.WriteLine(errorMesage);
             Console.SetCursorPosition(GetScreenWidth() / 2, panelStartRow + 2);
@@ -177,7 +177,7 @@ namespace ConsoleFileManager
             double num = Math.Round(bytes / Math.Pow(1024, place), 1);
             return $"{Math.Sign(byteCount) * num} {suf[place]}";
         }
-      
+
 
     }
 }
