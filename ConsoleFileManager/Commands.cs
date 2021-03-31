@@ -11,11 +11,16 @@ namespace ConsoleFileManager
         private static string[] _files;
         private static string error = "";
 
+        /// <summary>
+        /// Парсер входной строки
+        /// </summary>
+        /// <param name="inputString"></param>
+        /// <returns></returns>
         public static List<string> parseInputString(string inputString)
         {
-            List<string> commands = new List<string>(); // выходной список
-            string currentString = ""; // текущая строка
-            bool isInsideQuotes = false; // флаг внутренних кавычек
+            List<string> commands = new List<string>();
+            string currentString = "";
+            bool isInsideQuotes = false;
             char[] input = inputString.ToCharArray();
             for (int i = 0; i < input.Length; i++)
             {
@@ -30,12 +35,16 @@ namespace ConsoleFileManager
                     currentString = "";
                     continue;
                 }
-                currentString += input[i]; // собираем строку посимвольно
+                currentString += input[i];
             }
-            commands.Add(currentString); // добавляем строку в список
+            commands.Add(currentString);
             return commands;
         }
 
+        /// <summary>
+        /// Выполнение команды
+        /// </summary>
+        /// <param name="commands"></param>
         static void ExecuteCommand(List<string> commands)
         {
             var command = commands[0];
@@ -86,11 +95,18 @@ namespace ConsoleFileManager
             }
         }
 
+        /// <summary>
+        /// Выход
+        /// </summary>
         private static void Exit()
         {
             System.Environment.Exit(0);
         }
 
+        /// <summary>
+        /// Вывод содержимого файла
+        /// </summary>
+        /// <param name="arguments"></param>
         private static void PrintFile(List<string> arguments)
         {
             Console.BackgroundColor = ConsoleColor.Black;
@@ -110,6 +126,10 @@ namespace ConsoleFileManager
 
         }
 
+        /// <summary>
+        /// Создать файл
+        /// </summary>
+        /// <param name="arguments"></param>
         private static void CreateFile(List<string> arguments)
         {
             string filename = GetAbsolutePath(arguments[0]);
@@ -123,6 +143,10 @@ namespace ConsoleFileManager
             }
         }
 
+        /// <summary>
+        /// Создать папку
+        /// </summary>
+        /// <param name="arguments"></param>
         private static void CreateDirectory(List<string> arguments)
         {
             string directory = GetAbsolutePath(arguments[0]);
@@ -136,6 +160,9 @@ namespace ConsoleFileManager
             }
         }
 
+        /// <summary>
+        /// Следующая страница в списке файлов
+        /// </summary>
         private static void NextPage()
         {
             if (currentPage == pagesCount)
@@ -148,6 +175,9 @@ namespace ConsoleFileManager
             }
         }
 
+        /// <summary>
+        /// Предыдущая страница в списке файлов
+        /// </summary>
         private static void PreviousPage()
         {
             if (currentPage == 0)
@@ -160,6 +190,10 @@ namespace ConsoleFileManager
             }
         }
 
+        /// <summary>
+        /// Явно задать страницу в списке файлов
+        /// </summary>
+        /// <param name="arguments"></param>
         private static void SetPage(List<string> arguments)
         {
             int number = Convert.ToInt32(arguments[0]);
@@ -170,6 +204,10 @@ namespace ConsoleFileManager
             currentPage = number - 1;
         }
 
+        /// <summary>
+        /// Поменять директорию
+        /// </summary>
+        /// <param name="arguments"></param>
         private static void ChangeDirectory(List<string> arguments)
         {
             var path = GetAbsolutePath(arguments[0]);
@@ -180,16 +218,28 @@ namespace ConsoleFileManager
             }
         }
 
+        /// <summary>
+        /// Установить уровень вложенности каталогов
+        /// </summary>
+        /// <param name="arguments"></param>
         private static void SetEnclosureLevel(List<string> arguments)
         {
             SetEnclosureLevel(Convert.ToInt32(arguments[0]));
         }
 
+        /// <summary>
+        /// Установить значение для пагинации списка файлов
+        /// </summary>
+        /// <param name="arguments"></param>
         private static void SetPaging(List<string> arguments)
         {
             SetCountElementsOnPage(Convert.ToInt32(arguments[0]));
         }
 
+        /// <summary>
+        /// Удалить каталог или файл
+        /// </summary>
+        /// <param name="arguments"></param>
         private static void Remove(List<string> arguments)
         {
             var source = GetAbsolutePath(arguments[0]);
@@ -203,6 +253,10 @@ namespace ConsoleFileManager
             }
         }
 
+        /// <summary>
+        /// Скопировать файл
+        /// </summary>
+        /// <param name="arguments"></param>
         private static void Copy(List<string> arguments)
         {
             var source = GetAbsolutePath(arguments[0]);
@@ -222,6 +276,10 @@ namespace ConsoleFileManager
             }
         }
 
+        /// <summary>
+        /// Вывести список директорий
+        /// </summary>
+        /// <param name="arguments"></param>
         private static void ListDirectory(List<string> arguments)
         {
             var path = Path.Combine(GetCurrentDirectory(), arguments[0]);
@@ -231,32 +289,32 @@ namespace ConsoleFileManager
 
         }
 
+        /// <summary>
+        /// Скопировать директорию
+        /// </summary>
+        /// <param name="sourceDirName"></param>
+        /// <param name="destDirName"></param>
         static void CopyDirectory(string sourceDirName, string destDirName)
         {
-            // Get the subdirectories for the specified directory.
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
 
             if (!dir.Exists)
             {
                 throw new DirectoryNotFoundException(
-                    "Source directory does not exist or could not be found: "
+                    "Директория не существует или не может быть найдена"
                     + sourceDirName);
             }
 
             DirectoryInfo[] dirs = dir.GetDirectories();
-
-            // If the destination directory doesn't exist, create it.       
+     
             Directory.CreateDirectory(destDirName);
 
-            // Get the files in the directory and copy them to the new location.
             FileInfo[] files = dir.GetFiles();
             foreach (FileInfo file in files)
             {
                 string tempPath = Path.Combine(destDirName, file.Name);
                 file.CopyTo(tempPath, false);
             }
-
-            // If copying subdirectories, copy them and their contents to new location.
 
             foreach (DirectoryInfo subdir in dirs)
             {
@@ -266,6 +324,11 @@ namespace ConsoleFileManager
 
         }
 
+        /// <summary>
+        /// Получить абсолютный путь
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         static string GetAbsolutePath(string path)
         {
             if (Path.IsPathRooted(path))
