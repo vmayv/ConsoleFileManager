@@ -122,7 +122,7 @@ namespace ConsoleFileManager
             {
                 return;
             }
-            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.BackgroundColor = ConsoleColor.Black;
 
         }
 
