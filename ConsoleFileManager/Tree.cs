@@ -15,6 +15,15 @@ namespace ConsoleFileManager
             var startRow = headerHeight;
             WriteDirectories(path, columnWidth, 0, depth, 1, ref startRow);
         }
+        /// <summary>
+        /// Вывод списка директорий
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="columnWidth"></param>
+        /// <param name="depthStart"></param>
+        /// <param name="depthEnd"></param>
+        /// <param name="column"></param>
+        /// <param name="line"></param>
         static void WriteDirectories(string path, int columnWidth, int depthStart, int depthEnd, int column, ref int line)
         {
             if (depthStart == depthEnd)
@@ -42,6 +51,12 @@ namespace ConsoleFileManager
             }
         }
 
+        /// <summary>
+        /// Вывод списка файлов
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="columnWidth"></param>
+        /// <param name="countElementsOnPage"></param>
         private static void WriteFiles(string path, int columnWidth, int countElementsOnPage)
         {
             try
@@ -74,7 +89,9 @@ namespace ConsoleFileManager
             {
             }
         }
-
+        /// <summary>
+        /// Отрисовка панели
+        /// </summary>
         static void WritePanel()
         {
             var drive = DriveInfo.GetDrives().FirstOrDefault(e => e.Name == Path.GetPathRoot(GetCurrentDirectory()));
@@ -100,6 +117,9 @@ namespace ConsoleFileManager
 
         }
 
+        /// <summary>
+        /// Отрисовка границ
+        /// </summary>
         static void WriteBorders()
         {
             for (int i = panelStartRow; i < GetScreenHeight() - 1; i++)
@@ -140,6 +160,12 @@ namespace ConsoleFileManager
             Console.WriteLine("╦");
         }
 
+        /// <summary>
+        /// Форматирование колонок
+        /// </summary>
+        /// <param name="windowWidth"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
         static string FormatColumns(int windowWidth, params string[] values)
         {
             windowWidth--;
@@ -167,9 +193,14 @@ namespace ConsoleFileManager
             return FormatColumns(GetScreenWidth(), values);
         }
 
+        /// <summary>
+        /// Для вывода размера файлов
+        /// </summary>
+        /// <param name="byteCount"></param>
+        /// <returns></returns>
         static String BytesToString(long byteCount)
         {
-            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
+            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
             if (byteCount == 0)
                 return "0" + suf[0];
             long bytes = Math.Abs(byteCount);

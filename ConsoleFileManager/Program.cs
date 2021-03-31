@@ -10,6 +10,7 @@ namespace ConsoleFileManager
         static int headerHeight = 6;
         static void Main(string[] args)
         {
+            // Инициализируем конфиг и задаём параметры
             InitializeConfig();
             Console.SetWindowSize(GetScreenWidth(), GetScreenHeight());
             Console.BackgroundColor = ConsoleColor.Black;
