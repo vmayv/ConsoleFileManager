@@ -12,8 +12,15 @@ namespace ConsoleFileManager
 
         static void WriteDirectories(string path, int columnWidth, int depth)
         {
-            var startRow = headerHeight;
-            WriteDirectories(path, columnWidth, 0, depth, 1, ref startRow);
+            try
+            {
+                var startRow = headerHeight;
+                WriteDirectories(path, columnWidth, 0, depth, 1, ref startRow);
+            }
+            catch (UnauthorizedAccessException)
+            {
+            }
+
         }
         /// <summary>
         /// Вывод списка директорий
